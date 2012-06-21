@@ -20,8 +20,7 @@ Puppet::Reports.register_report(:flowdock) do
   API_KEY = @config[:flowdock_api_key]
   STATUSES = @config[:statuses] || ['failed']
   LEVEL = @config[:level] || :warning
-  NAME = @config[:from][:name] || 'Puppet master'
-  ADDRESS = @config[:from][:address] || 'puppet@yourdomain.com'
+  ADDRESS = @config[:from_address] || 'puppet@yourdomain.com'
 
   include Puppet::Util::Colors
 
@@ -42,10 +41,10 @@ Puppet::Reports.register_report(:flowdock) do
       # create a new Flow object with API Token and sender information
       flow = Flowdock::Flow.new(:api_token => API_KEY,
         :source => "Puppet",
-        :from => {:name => NAME, :address => ADDRESS})
+        :from => {:name => self.host, :address => ADDRESS})
 
       # send message to the flow
-      flow.push_to_team_inbox(:subject => "Puppet run for #{self.host} [#{self.status}] at #{Time.now.asctime}.",
+      flow.push_to_team_inbox(:subject => "Puppet run #{self.status}.",
         :content => output,
         :tags => ["puppet", "#{self.status}", "#{self.host}"])
     end

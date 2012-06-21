@@ -30,9 +30,7 @@ Installation & Usage
   :flowdock_api_key: "your_key", # mandatory
   :statuses: ["failed", "changed", "unchanged"], # default to ["failed"]
   :level: :warning,
-  :from: {
-    :name: 'Puppet master',
-    :address: 'from@acme.com'
+  :from_address: 'from@acme.com'
   }
 }
 ```
