@@ -17,26 +17,35 @@ Puppet::Reports.register_report(:flowdock) do
   raise(Puppet::ParseError, "Flowdock report config file #{configfile} not readable") unless File.exist?(configfile)
   @config = YAML.load_file(configfile)
 
-  API_KEY =  @config[:flowdock_api_key]
+  API_KEY = @config[:flowdock_api_key]
+  STATUSES = @config[:statuses] || ['failed']
+  LEVEL = @config[:level] || :warning
+  NAME = @config[:from][:name] || 'Puppet master'
+  ADDRESS = @config[:from][:address] || 'puppet@yourdomain.com'
+
+  include Puppet::Util::Colors
 
   desc <<-DESC
-  Send notification of failed reports to Flowdock.
+  Send notification of reports to Flowdock.
   DESC
 
   def process
-    if self.status == 'failed'
-      output = []
+    if STATUSES.include? self.status
+      output = ""
       self.logs.each do |log|
-        output << log
+        if Puppet::Util::Log.levels.index(log.level) >= Puppet::Util::Log.levels.index(LEVEL)
+          s = html_color(log.level, "#{log.source}: #{log.message}") + "</br>"
+          output = output + s
+        end
       end
 
       # create a new Flow object with API Token and sender information
       flow = Flowdock::Flow.new(:api_token => API_KEY,
         :source => "Puppet",
-        :from => {:name => "Puppet master", :address => "puppet@yourdomain.com"})
+        :from => {:name => NAME, :address => ADDRESS})
 
       # send message to the flow
-      flow.send_message(:subject => "Puppet run for #{self.host} #{self.status} at #{Time.now.asctime}.",
+      flow.push_to_team_inbox(:subject => "Puppet run for #{self.host} [#{self.status}] at #{Time.now.asctime}.",
         :content => output,
         :tags => ["puppet", "#{self.status}", "#{self.host}"])
     end

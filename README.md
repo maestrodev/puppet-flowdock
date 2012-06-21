@@ -22,8 +22,20 @@ Installation & Usage
 2.  Install puppet-flowdock as a module in your Puppet master's module
     path.
 
-3.  Update the `flowdock_api_key` variable in the `flowdock.yaml` file with
-    your Flowdock API key.
+3.  Create `/etc/puppet/flowdock.yaml` file with at least your Flowdock API key, and possibly other config options.
+
+```
+---
+{
+  :flowdock_api_key: "your_key", # mandatory
+  :statuses: ["failed", "changed", "unchanged"], # default to ["failed"]
+  :level: :warning,
+  :from: {
+    :name: 'Puppet master',
+    :address: 'from@acme.com'
+  }
+}
+```
 
 4.  Enable pluginsync and reports on your master and clients in `puppet.conf`
 
@@ -41,12 +53,13 @@ Author
 ------
 
 James Turnbull <james@lovedthanlost.net>
+Carlos Sanchez <csanchez@maestrodev.com>
 
 License
 -------
 
-    Author:: James Turnbull (<james@lovedthanlost.net>)
-    Copyright:: Copyright (c) 2012 James Turnbull
+    Author:: James Turnbull <james@lovedthanlost.net>, Carlos Sanchez <csanchez@maestrodev.com>
+    Copyright:: Copyright (c) 2012 James Turnbull, MaestroDev Inc.
     License:: Apache License, Version 2.0
 
     Licensed under the Apache License, Version 2.0 (the "License");
