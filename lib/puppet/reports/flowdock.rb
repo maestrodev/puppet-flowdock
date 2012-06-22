@@ -4,7 +4,7 @@ require 'yaml'
 begin
   require 'flowdock'
 rescue LoadError => e
-  Puppet.info "You need the `flowdock` gem to use the Flowdock report"
+  Puppet.warn "You need the `flowdock` gem to use the Flowdock report"
 end
 
 unless Puppet.version >= '2.6.5'
@@ -44,8 +44,8 @@ Puppet::Reports.register_report(:flowdock) do
         :from => {:name => self.host, :address => ADDRESS})
 
       # send message to the flow
-      flow.push_to_team_inbox(:subject => "Puppet run #{self.status}.",
-        :content => output,
+      flow.push_to_team_inbox(:subject => "Puppet run [#{self.status}].",
+        :content => output.empty? ? "no output" : output,
         :tags => ["puppet", "#{self.status}", "#{self.host}"])
     end
   end
