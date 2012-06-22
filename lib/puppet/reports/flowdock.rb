@@ -14,10 +14,7 @@ end
 Puppet::Reports.register_report(:flowdock) do
 
   configfile = File.join([File.dirname(Puppet.settings[:config]), "flowdock.yaml"])
-  unless File.exist?(configfile)
-    Puppet.info "Flowdock report config file #{configfile} not found, assuming we are running in an agent"
-    return
-  end
+  raise(Puppet::ParseError, "Flowdock report config file #{configfile} not found") unless File.exist?(configfile)
   @config = YAML.load_file(configfile)
 
   API_KEY = @config[:flowdock_api_key]
