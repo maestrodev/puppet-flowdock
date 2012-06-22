@@ -4,7 +4,7 @@ require 'yaml'
 begin
   require 'flowdock'
 rescue LoadError => e
-  Puppet.warn "You need the `flowdock` gem to use the Flowdock report"
+  Puppet.warning "You need the `flowdock` gem to use the Flowdock report"
 end
 
 unless Puppet.version >= '2.6.5'
