@@ -4,7 +4,7 @@ require 'yaml'
 begin
   require 'flowdock'
 rescue LoadError => e
-  Puppet.warning "You need the `flowdock` gem to use the Flowdock report"
+  Puppet.info "You need the `flowdock` gem to use the Flowdock report"
 end
 
 unless Puppet.version >= '2.6.5'
@@ -14,7 +14,10 @@ end
 Puppet::Reports.register_report(:flowdock) do
 
   configfile = File.join([File.dirname(Puppet.settings[:config]), "flowdock.yaml"])
-  raise(Puppet::ParseError, "Flowdock report config file #{configfile} not readable") unless File.exist?(configfile)
+  unless File.exist?(configfile)
+    Puppet.info "Flowdock report config file #{configfile} not found, assuming we are running in an agent"
+    return
+  end
   @config = YAML.load_file(configfile)
 
   API_KEY = @config[:flowdock_api_key]

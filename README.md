@@ -22,16 +22,16 @@ Installation & Usage
 2.  Install puppet-flowdock as a module in your Puppet master's module
     path.
 
-3.  Create `/etc/puppet/flowdock.yaml` file with at least your Flowdock API key, and possibly other config options.
+3.  Create `/etc/puppet/flowdock.yaml` file in the Puppet master with at least your Flowdock API key,
+    and possibly other config options.
 
 ```
 ---
 {
   :flowdock_api_key: "your_key", # mandatory
   :statuses: ["failed", "changed", "unchanged"], # default to ["failed"]
-  :level: :warning,
+  :level: :warning, # Puppet output level (warning, notice, info,...)
   :from_address: 'from@acme.com'
-  }
 }
 ```
 
@@ -47,10 +47,12 @@ Installation & Usage
 
 5.  Run the Puppet client and sync the report as a plugin
 
-Author
-------
+
+Authors
+-------
 
 James Turnbull <james@lovedthanlost.net>
+
 Carlos Sanchez <csanchez@maestrodev.com>
 
 License
