@@ -43,6 +43,12 @@ Puppet::Reports.register_report(:flowdock) do
         :source => "Puppet",
         :from => {:name => self.host, :address => ADDRESS})
 
+      # Accommodate an HTTPS proxy setting
+      if proxy = ENV['HTTPS_PROXY']
+        proxy = URI.parse(proxy)
+        Flowdock::Flow.http_proxy proxy.host, proxy.port
+      end
+
       # send message to the flow
       flow.push_to_team_inbox(:subject => "Puppet run [#{self.status}].",
         :content => output.empty? ? "no output" : output,
