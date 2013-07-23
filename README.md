@@ -25,23 +25,23 @@ Installation & Usage
 3.  Create `/etc/puppet/flowdock.yaml` file in the Puppet master with at least your Flowdock API key,
     and possibly other config options.
 
-    ---
-    {
-      :flowdock_api_key: "your_key", # mandatory
-      :statuses: ["failed", "changed", "unchanged"], # default to ["failed"]
-      :level: :warning, # Puppet output level (warning, notice, info,...)
-      :from_address: 'from@acme.com'
-    }
+        ---
+        {
+          :flowdock_api_key: "your_key", # mandatory
+          :statuses: ["failed", "changed", "unchanged"], # default to ["failed"]
+          :level: :warning, # Puppet output level (warning, notice, info,...)
+          :from_address: 'from@acme.com'
+        }
 
 4.  Enable pluginsync and reports on your master and clients in `puppet.conf`
 
-    [master]
-    report = true
-    reports = flowdock
-    pluginsync = true
-    [agent]
-    report = true
-    pluginsync = true
+        [master]
+        report = true
+        reports = flowdock
+        pluginsync = true
+        [agent]
+        report = true
+        pluginsync = true
 
 5.  Run the Puppet client and sync the report as a plugin
 
